@@ -1,1 +1,44 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Giro de Materiais</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+    input { padding: 10px; width: 300px; }
+    button { padding: 10px 20px; margin-left: 10px; }
+    #resultado { margin-top: 20px; font-size: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Consulta de Giro de Materiais</h1>
+  <p>Digite o código do material:</p>
+  <input type="text" id="material" placeholder="Ex: MAT123">
+  <button onclick="consultar()">Consultar</button>
+  <div id="resultado"></div>
+
+  <script>
+    const altoGiro = ["MAT001", "MAT002", "MAT003"];
+    const medioGiro = ["MAT101", "MAT102", "MAT103"];
+    const baixoGiro = ["MAT201", "MAT202", "MAT203"];
+
+    function consultar() {
+      const mat = document.getElementById("material").value.trim().toUpperCase();
+      let resultado = "";
+
+      if (altoGiro.includes(mat)) {
+        resultado = "🔵 Material de ALTO GIRO";
+      } else if (medioGiro.includes(mat)) {
+        resultado = "🟡 Material de MÉDIO GIRO";
+      } else if (baixoGiro.includes(mat)) {
+        resultado = "🔴 Material de BAIXO GIRO";
+      } else {
+        resultado = "⚠️ Material não encontrado nas listas.";
+      }
+
+      document.getElementById("resultado").innerText = resultado;
+    }
+  </script>
+</body>
+</html>
