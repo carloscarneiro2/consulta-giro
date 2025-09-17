@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -14,29 +13,31 @@
 <body>
   <h1>Consulta de Giro de Materiais</h1>
   <p>Digite o código do material:</p>
-  <input type="text" id="material" placeholder="Ex: MAT123">
+  <input type="text" id="material" placeholder="Ex: 2066532">
   <button onclick="consultar()">Consultar</button>
   <div id="resultado"></div>
 
   <script>
-    const altoGiro = ["MAT001", "MAT002", "MAT003"];
-    const medioGiro = ["MAT101", "MAT102", "MAT103"];
-    const baixoGiro = ["MAT201", "MAT202", "MAT203"];
+    let dados = null;
+
+    // Carrega JSON com listas
+    fetch("materiais.json")
+      .then(r => r.json())
+      .then(d => { dados = d; })
+      .catch(err => console.error("Erro ao carregar materiais.json", err));
 
     function consultar() {
-      const mat = document.getElementById("material").value.trim().toUpperCase();
-      let resultado = "";
+      const mat = document.getElementById("material").value.trim();
+      if (!dados) { alert("Listas não carregadas ainda."); return; }
+      let resultado = "⚠️ Material não encontrado nas listas.";
 
-      if (altoGiro.includes(mat)) {
+      if (dados.altoGiro.includes(mat)) {
         resultado = "🔵 Material de ALTO GIRO";
-      } else if (medioGiro.includes(mat)) {
+      } else if (dados.medioGiro.includes(mat)) {
         resultado = "🟡 Material de MÉDIO GIRO";
-      } else if (baixoGiro.includes(mat)) {
+      } else if (dados.baixoGiro.includes(mat)) {
         resultado = "🔴 Material de BAIXO GIRO";
-      } else {
-        resultado = "⚠️ Material não encontrado nas listas.";
       }
-
       document.getElementById("resultado").innerText = resultado;
     }
   </script>
