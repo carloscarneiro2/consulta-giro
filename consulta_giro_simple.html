@@ -6,7 +6,7 @@
   <style>
     body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
     input { padding: 10px; width: 300px; }
-    button { padding: 10px 20px; margin-left: 10px; }
+    button { padding: 10px 20px; margin-left: 10px; cursor: pointer; }
     #resultado { margin-top: 20px; font-size: 20px; font-weight: bold; }
   </style>
 </head>
@@ -15,6 +15,7 @@
   <p>Digite o código do material:</p>
   <input type="text" id="material" placeholder="Ex: 2066532">
   <button onclick="consultar()">Consultar</button>
+  <button onclick="limpar()">Limpar</button>
   <div id="resultado"></div>
 
   <script>
@@ -39,6 +40,11 @@
         resultado = "🔴 Material de BAIXO GIRO";
       }
       document.getElementById("resultado").innerText = resultado;
+    }
+
+    function limpar() {
+      document.getElementById("material").value = "";
+      document.getElementById("resultado").innerText = "";
     }
   </script>
 </body>
