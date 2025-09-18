@@ -110,6 +110,12 @@
       font-weight: 600;
       color: var(--dark);
     }
+    .footer {
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+      padding: 15px;
+    }
   </style>
 </head>
 <body>
@@ -126,6 +132,8 @@
     </div>
   </div>
 
+  <div class="footer">© Cebrace — Sistema de Consulta de Giro</div>
+
   <script>
     let dados = null;
 
@@ -141,7 +149,7 @@
       .catch(err => console.error("Erro ao carregar materiais.json", err));
 
     function renderEnderecos(lista) {
-      return '<div class="enderecos-box"><h3>📦 Endereços para estocagem desse giro:</h3><div class="chips">' +
+      return '<div class="enderecos-box"><h3>Posições de Estoque para o Giro:</h3><div class="chips">' +
         lista.map(e => `<div class='chip'>${e}</div>`).join("") +
         "</div></div>";
     }
