@@ -7,7 +7,7 @@
   <style>
     :root {
       --orange: #f08600;
-      --orange-dark: #d97400;
+      --yellow: #ffd65a;
       --bg-gradient: linear-gradient(135deg, #fda085, #f6d365);
       --white: #fff;
       --dark: #333;
@@ -22,15 +22,27 @@
       min-height: 100vh;
     }
     .topbar {
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(6px);
-      color: white;
-      padding: 18px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      padding: 30px 20px;
       text-align: center;
-      font-size: 32px;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .topbar h1 {
+      font-size: 42px;
       font-weight: 900;
-      letter-spacing: 2px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 0;
+      background: linear-gradient(135deg, var(--orange), var(--yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .topbar p {
+      margin: 5px 0 0;
+      font-size: 16px;
+      color: white;
+      font-weight: 500;
     }
     .container {
       flex: 1;
@@ -110,7 +122,7 @@
     .enderecos-box h3 {
       margin: 0 0 10px;
       font-size: 16px;
-      color: var(--orange-dark);
+      color: var(--orange);
     }
     .chips {
       display: flex;
@@ -140,7 +152,10 @@
   </style>
 </head>
 <body>
-  <div class="topbar">SCG</div>
+  <div class="topbar">
+    <h1>SCG</h1>
+    <p>Sistema de Consulta de Giro</p>
+  </div>
 
   <div class="container">
     <div class="card">
