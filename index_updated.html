@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SCG — Consulta Giro</title>
+  <style>
+    :root {
+      --orange: #f08600;
+      --yellow: #ffd65a;
+      --bg-gradient: linear-gradient(135deg, #fda085, #f6d365);
+      --white: #fff;
+      --dark: #333;
+      --muted: #777;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg-gradient);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(8px);
+      padding: 30px 20px;
+      text-align: center;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .topbar h1 {
+      font-size: 42px;
+      font-weight: 900;
+      margin: 0;
+      color: white;
+    }
+    .topbar p {
+      margin: 5px 0 0;
+      font-size: 16px;
+      color: white;
+      font-weight: 500;
+    }
+    .container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: var(--white);
+      padding: 32px;
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+      animation: fadeIn 0.6s ease;
+    }
+    .card input {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 6px rgba(240,134,0,0.3);
+    }
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    button {
+      flex: 1;
+      padding: 14px 0;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button.consultar {
+      background: linear-gradient(135deg, #f6d365, #fda085);
+      color: white;
+    }
+    button.consultar:hover {
+      background: linear-gradient(135deg, #fda085, #f6d365);
+      transform: translateY(-2px);
+    }
+    button.clear {
+      background: #f0f0f0;
+      color: var(--dark);
+    }
+    button.clear:hover {
+      background: #e0e0e0;
+    }
+    #resultado {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--dark);
+    }
+    .enderecos-box {
+      margin-top: 15px;
+      background: #fafafa;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: left;
+    }
+    .enderecos-box h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: var(--orange);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      background: #f0f0f0;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .footer {
+      text-align: center;
+      font-size: 14px;
+      color: white;
+      padding: 15px;
+      background: rgba(0,0,0,0.2);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>SCG</h1>
+    <p>Sistema de Consulta de Giro</p>
+  </div>
+
+  <div class="container">
+    <div class="card">
+      <input type="text" id="material" placeholder="Digite o código (ex: 2066532)">
+      <div class="buttons">
+        <button class="consultar" onclick="consultar()">Consultar</button>
+        <button class="clear" onclick="limpar()">Limpar</button>
+      </div>
+      <div id="resultado"></div>
+    </div>
+  </div>
+
+  <div class="footer">© Cebrace — Sistema de Consulta de Giro</div>
+
+  <script>
+    let dados = null;
+
+    const enderecos = {
+      alto: ["A56","A55","A54","A53","A52","A51","A50","A49","A48","A47","A46","A45","A44","A43","A42","A41","A40","A39","A38","A37","A36","A35","A34","A33","A32","A31","A30","A29","A28","A27","A26","A25"],
+      medio: ["A24","A23","A22","A21","A20","A19","A18","A17","A15","A13","A11","A09","A07","A05","H61","H63","H65","H67","H69","H71","H73","H75","H77","H79","H80","H78","H76","H74","H72","H70"],
+      baixo: ["A57","A59","A61","A63","A65","A67","A69","A71","A76","A74","A72","A70","A68","A66","A64"]
+    };
+
+    fetch("materiais.json")
+      .then(r => r.json())
+      .then(d => { dados = d; })
+      .catch(err => console.error("Erro ao carregar materiais.json", err));
+
+    function renderEnderecos(lista) {
+      return '<div class="enderecos-box"><h3>Posições de Estoque para o Giro:</h3><div class="chips">' +
+        lista.map(e => `<div class='chip'>${e}</div>`).join("") +
+        "</div></div>";
+    }
+
+    function consultar(){
+      const mat = document.getElementById("material").value.trim();
+      if(!dados){ alert("Listas não carregadas ainda."); return; }
+      let resultado = "⚠️ Material não encontrado nas listas.";
+
+      if(dados.altoGiro.includes(mat)){
+        resultado = "🟢 Material de ALTO GIRO" + renderEnderecos(enderecos.alto);
+      } else if(dados.medioGiro.includes(mat)){
+        resultado = "🟡 Material de MÉDIO GIRO" + renderEnderecos(enderecos.medio);
+      } else if(dados.baixoGiro.includes(mat)){
+        resultado = "🔴 Material de BAIXO GIRO" + renderEnderecos(enderecos.baixo);
+      }
+      document.getElementById("resultado").innerHTML = resultado;
+    }
+
+    function limpar(){
+      document.getElementById("material").value = "";
+      document.getElementById("resultado").innerHTML = "";
+      document.getElementById("material").focus();
+    }
+  </script>
+</body>
+</html>
